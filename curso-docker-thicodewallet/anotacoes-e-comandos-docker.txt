@@ -1,0 +1,101 @@
+
+Data: 20/06/2025 10:00
+
+Autor: Matheus Pereira
+
+Descrição: 
+    nesse bloco de notas temos todos os comando que foram usados durante o curso de Docker do canal ThiCode,
+    basta seguir os passos abaixo, que tera um bom aproveitamento do curso.
+
+Playlist do Curso: https://www.youtube.com/playlist?list=PLR8JXremim5BWiO-MCaAffQYwFZrD11-j
+
+CANAL - THICODE - CURSO DE DOCKER
+
+
+ROTAS DA APLICAÇÃO:
+    ENTRADA: http://localhost/transaction/input
+    SAIDA: http://localhost/transaction/output
+    ENTRAR: http://localhost/signin
+    CADASTRAR: http://localhost/signup
+
+
+AULA 03: CRIANDO A IMAGEM DA PASTA 'API'
+    
+    CRIANDO UMA NOVA NETWORK 
+    docker network create net-wallet
+    OBS: O COMANDO ACIMA E DA AULA 04, MAIS VAMOS JÁ DEFINIR TUDO NO COMEÇO
+
+    FAZENDO O BUILD DA IMAGEM
+    docker build -t api-wallet .
+
+    RODANDO O CONTAINER A PARTIR DA IMAGEM - COM A DEFINIÇÃO DA NETWORK
+    docker run --network net-wallet -d -p 127.0.0.1:5002:5002 api-wallet
+    
+    RENOMEANDO O CONTAINER
+    docker rename my_container my_new_container
+
+    OBS: CASO QUEIRA EXECUTAR SEM A NETWORK
+    RODANDO O CONTAINER A PARTIR DA IMAGEM - SEM A DEFINIÇÃO DA NETWORK
+    docker run -d -p 127.0.0.1:5002:5002 api-wallet
+
+
+AULA 04: CRIANDO A IMAGEM DO MONGO_DB
+
+    FAZENDO O BUILD DA IMAGEM
+    docker build -t nome_imagem .
+
+    RODANDO O CONTAINER A PARTIR DA IMAGEM E JÁ DEFININDO A NETWORK
+    docker run -d --name mongo-wallet -p 27017:27017 --network net-wallet mongo
+
+
+AULA 05: CRIANDO A IMAGEM DA SPA - REACT
+    OBS: OS CODIGOS ABAIXO FORAM CRIADOS NA AULA 06
+    MAIS PARA SEGUIR UM MELHOR PASSO A PASSO, COLOQUEI NESSA ORDEM
+
+    FAZENDO O BUILD DA IMAGEM
+    docker build -t spa-wallet .
+
+    RODANDO O CONTAINER A PARTIR DA IMAGEM E JÁ DEFININDO A NETWORK E SEU VOLUME
+    docker run -d --name spa-wallet -v spa-volume:/var/www/html --network net-wallet spa-wallet
+    OBS: O VOLUME FOI CRIADO NESSE COMANDO ACIMA OU SEJA, NÃO FOI CRIADO IGUAL A NETWORK,
+    ONDE CRIAMOS A NETWORK E DEPOIS DEFINIMOS O CONTAINER QUE USARA ELA,
+    MAIS PODEMOS CRIAR OS VOLUMES SEPARADAMENTE E DEPOIS DEFINIR O CONTAINER QUE O USARA.
+
+
+AULA 06: OQUE E O NGINX E CRIAÇÃO DO VOLUME
+    CRIE UM VOLUME EM SEGUIDA DEFINA O CONTAINER QUE IRA USALO
+
+    docker volume create volume-name    
+    docker run -d -v volume-name:/var/www/html
+
+
+AULA 07: CRIANDO O CONTAINER PARA O NGINX - SERVIR A SPA APARTIR DE UM VOLUME
+    FAZENDO O BUILD DA IMAGEM
+    docker build -t nginx-wallet .
+
+    RODA O CONTAINER DO NGINX, APARTIR DA IMAGEM JÁ CRIADA, NGINX-WALLET
+    docker run -d --name nginx-wallet -v spa-volume:/var/www/html -p 80:80 --network net-wallet nginx-wallet
+
+
+AULA 08: CRIANDO O ARQUIVO DOCKER COMPOSER - OTIMIZAR TAREFAS
+
+    SOBE OS CONTAINERS, REDES E VOLUMES, CASO [REDE E VOLUME] TENHA SIDO DEFINIDO NO ARQUIVO DOCKER COMPOSE
+    docker compose up -d
+
+    PARA E REMOVE OS CONTAINERS E REDES CRIADOS PELO compose up
+    docker compose down 
+
+
+AULA 09: REALIZANDO DEPLOY NA AWS - DOKER & LINUX
+    NESSA AULA CRIAMOS UMA CONTA NA AWS E SUBIMOS UMA INSTANCIA DO EC2 LINUX UBUNTU
+    DEPOIS RODAMOS VARIOS COMANDOS LINUX PARA CONFIGURA O DOCKER PARA FUNCIONAR COM ESSA INSTANCIA.
+    NESSA INSTANCIA UBUNTU CRIAMOS UMA KEY SSH E A COLOCAMOS EM NOSSA CONTA DO GITHUB,
+    COM ISSO PODEMOS USAR O GIT NESSA INSTANCIA E INTEGRAR O GIT COM O GITHUB.
+    CONTINUANDO RODAMOS O DOCKER COMPOSE PARA SUBIR NOSSO PROJETO
+
+    
+AULA 10: CONFIGURAÇÃO DO PROXY REVERSO DO NGINX
+    NESSA AULA ALTERAMOS O ARQUIVO CONF DO NGINX, INCLUIDO O TRECHO DA CONFIGURAÇÃO DO PROXY REVERSO.
+    REALIZAMOS TAMBÉM A REMOÇÃO DA PORTA 80 DO ARQUIVO '.ENV' DA 'SPA' NA URL DO AWS EC2
+
+    OBS: LEMBRE-SE DE TROCAR O IP NO ARQUIVO '/spa/.env' PARA O IP PUBLICO DE SUA INSTANCIA EC2

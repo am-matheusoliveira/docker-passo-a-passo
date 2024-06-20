@@ -1,0 +1,176 @@
+
+Data: 20/06/2025 10:00
+
+Autor: Matheus Pereira
+
+Descrição: 
+    comandos mais usados do docker, exemplos praticos numa aplição real.
+    esses exemplos se baseiam no tutorial de Docker da Microsoft.
+
+Tutorial Microsoft: https://learn.microsoft.com/pt-br/visualstudio/docker/tutorials/docker-tutorial
+
+---------------------------COMANDOS MAIS USADOS-------------------------------
+
+------------------------------------------------------------------------------
+# criação de network: 
+    criar uma network, 
+    conectar um container a uma network,
+    desconectar um container de uma network,
+    inspencionar um container ou outros objetos.
+
+    criando:        docker network create network_name
+    conectando:     docker network connect network_name container_name
+    desconectando:  docker network disconnect network_name container_name
+    inspencionando: docker inspect network_name ou container_name ou image_name
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# variavel $PWD Linux, Windows:
+    retorna o local exato onde usuário esta na CLI
+    Exemplo: 'c:/projetos-web' ao chamar $PWD o retorno sera 'c:/projetos-web'
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# Flag -w "caminho" defini e salta para o caminho, apos a execução do comando.
+    exemplo: docker run -i -t --rm --name container_name -v "$PWD:/var/www/html" -w "/var/www/html" bash
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# Flag -c "comando": executa um comando no momento que um container e iniciado.
+    exemplo: -c "npm install && node index"
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# executar um container e no momento que ele for encerrado, exclua!
+OBS: Flag --rm ela e a responsavel por excluir o container quando ele for encerrado.
+    exemplo: docker run -d --rm --name container_name image_name
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# listar os containers cujo o status seja = exited e mostrar apenas o seu id.
+    exemplo: docker ps -f status=exited -q
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# remover varios containers de uma vez.
+    exemplo: docker rm $(docker ps -f status=exited -q)
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# executar um container em modo iterativo, abrir o bash.
+    exemplo:  docker run -i -t image_name
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# mostrar todos os containers, inclusive os que não estão em execução.
+    exemplo: docker ps -a
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# iniciar um container e mantelo rodando com algum serviço.
+    exemplo: docker start container_name
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# renomear um container
+    exemplo: docker rename my_container my_new_container
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# versão do docker compose
+    exemplo: docker-compose version
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# iniciar o container e executar alguma aplicação pelo comando exec
+    exemplo: docker exec -i -t container_name bash <== ou qualque outra
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# ponto final do comando docker build
+OBS: sera buscado na pasta raiz do projeto o arquivo Dockerfile, ou podemos passar o local onde ele esta.
+    exemplo: docker build -t api-wallet .
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# rodar imagem em 2º plano, ou seja não ficara com o CLI travado, exemplo: ao executar o node 'npm run dev'
+    exemplo: docker run -d
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+# network: com esse recurso poderemos fazer com que um container possa conversar com outros, desde que estejam na mesma network.
+    exemplo: docker network create net-wallet
+------------------------------------------------------------------------------
+
+--------------------------------SEGUNDA SEÇÃO---------------------------------
+
+-----------------------Tutorial Microsoft 1º Parte:---------------------------
+
+# criando um container.
+    comando: docker run -d -p 80:80 docker/getting-started
+
+# listando os containers.
+    comando: docker ps
+
+# parar e remover o container.
+    comando: docker stop <container-id>
+    comando: docker rm <container-id>
+
+# criando a imagem de um container, partindo do Dockerfile.
+    comando: docker build -t getting-started .
+
+# iniciando o container do aplicativo.
+    comando: docker run -dp 3000:3000 getting-started
+
+-----------------------Tutorial Microsoft 4º Parte:---------------------------
+
+# criando uma network.
+    comando: docker network create todo-app
+
+# iniciar container MySQL e conectar a network.
+    exemplo: 
+        docker run 
+        -d 
+        --network todo-app 
+        --network-alias mysql 
+        -v todo-mysql-data:/var/lib/mysql 
+        -e MYSQL_ROOT_PASSWORD=12345 
+        -e MYSQL_DATABASE=todos 
+        mysql:5.7
+
+# confirmando se o banco esta em execução.
+    comando: docker exec -it container_id mysql -p
+
+# mostrando os bancos, na lista estara o banco que criamos.
+    comando: SHOW DATABASES; 
+
+# inici o aplicativo e o conecta ao container do MySQL.
+comando: 
+    docker run 
+    -d
+    -p 3000:3000 
+    -w /app 
+    -v ${PWD}:/app 
+    --network todo-app 
+    -e MYSQL_HOST=mysql 
+    -e MYSQL_USER=root 
+    -e MYSQL_PASSWORD=12345 
+    -e MYSQL_DB=todos 
+    node:20-alpine 
+    sh -c "yarn install && yarn run dev"
+
+# docker logs
+    comando: docker logs <NOME_ARQUIVO>
+
+# conectar ao banco e verificar se os itens estão sendo gravados.
+    comando: docker exec -ti <mysql-container-id> mysql -p todos
+
+# manipulando o banco de dados.
+    comando 01: use todos;
+    comando 02: select * from todo_items;
+
+# subir os serviços pelo arquivo '.yml'.
+    comando: docker-compose up -d
+
+# encerrar os serviços e excluir os volumes.
+    comando: docker-compose down --volumes

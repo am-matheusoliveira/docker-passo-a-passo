@@ -1,0 +1,80 @@
+Data: 20/06/2025 10:00
+
+Autor: Matheus Pereira
+
+Descrição:
+  nesse bloco de notas temos todos os comando necessarios para configurar corretamente o Docker na instancia do AWS EC2,
+
+1.
+  antes de instalar o Docker engine pela primeira vez em uma nova maquina,
+  precisamos antes configurar o repositório do Docker.
+  depois disso poderemos instalar e atualizar o Docker a partir do repositório.
+
+1.1. 
+  adicione a chave GPG oficial do Docker.
+  comando 01:
+    # configure o repositório Apt do Docker.
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl gnupg
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+1.2.
+  comando 02:
+    # adicione o repositório às fontes do Apt:
+    echo \
+      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+
+2. 
+  instalação dos pacotes do Docker.
+    comando: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+3.
+  verificando se a instalação do Docker Engine foi bem-sucedida.
+    comando: sudo docker run hello-world
+
+== Configurações de Grupos e Usuários
+
+Info: 
+  Recebendo erros ao tentar executar sem root ?
+  O grupo de usuários 'docker' existe, mas não contém usuários,
+  por isso é necessário usar o 'sudo' para executar comandos do Docker.
+
+  Para criar o grupo 'docker' e adicionar seu usuário:
+
+1.
+  Crie o grupo do docker.
+    comando: sudo groupadd docker
+
+2.
+  Adicione seu usuário ao grupo docker.
+    comando: sudo usermod -aG docker $USER
+
+3.
+  Saia e faça login novamente para que sua participação no grupo seja reavaliada.
+
+  Você também pode executar o seguinte comando para ativar as alterações nos grupos:
+    comando: newgrp docker
+
+4.
+  Verifique se você pode executar comandos do docker sem o sudo.
+    comando: docker run hello-world
+
+== Configurações SSH, iremos usar essa chave SSH no GitGub para configurar o acesso aos nossos repositórios.
+
+# o primeiro passo é criar um par de chaves na máquina cliente (geralmente o seu computador).
+  comando:
+    ssh-keygen
+    ou
+    ssh-keygen -o -t rsa -C "sap.matheusoliveira@gmail.com"
+    OBS: rsa, esse e o nome da chave SSH, você pode decidir ser outro.
+
+# pressione enter para todas as opções e não adicione uma senha, então obtenha a chave com este comando.
+  comando:
+    cat ~/.ssh/id_chave_ssh
+    ou
+    cat /home/ubuntu/.ssh/id_chave_ssh
