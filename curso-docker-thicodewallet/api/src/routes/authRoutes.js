@@ -7,6 +7,7 @@ import { AuthUser } from "../schemas/validation/AuthUser.js";
 
 const authRouter = Router();
 
+// MOMENTO DA CRIAÇÃO DE UM NOVO USUÁRIO - MATHEUS
 authRouter.post(
   "/signup",
   validationSchemaMiddleware(CreateUser),

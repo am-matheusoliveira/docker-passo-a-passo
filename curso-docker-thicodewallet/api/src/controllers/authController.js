@@ -7,13 +7,14 @@ async function signup(req, res) {
     const resService = await authService.signup(body);
     return res.status(201).send(resService);
   } catch (err) {
+    // LOCAL ONDE O NGINX RETORNA O ERRO 409 - MATHEUS
     return res.status(409).send(err.message);
   }
 }
 
 async function signin(req, res) {
   const body = req.body;
-
+  
   try {
     const token = await authService.signin(body);
     return res.send(token);

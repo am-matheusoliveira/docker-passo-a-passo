@@ -37,6 +37,9 @@ export default function Signup() {
       </Link>
 
       <img src={logo} alt="" className="w-52" />
+      { 
+        // LOCAL ONDE OS ERROS SÃO MOSTRADOS AO SE CADASTRAR
+      }
       {apiErrors && <ErrorInput text={apiErrors} />}
       <form
         onSubmit={handleSubmit(handleSubmitForm)}

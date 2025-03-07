@@ -13,4 +13,4 @@ app.use(authRouter);
 app.use(transactionRouter);
 
 const port = process.env.PORT;
-app.listen(port, () => console.log(`Server listening in port ${port}`));
+app.listen(port, () => console.log(`Servidor escutando na porta ${port}`));

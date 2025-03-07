@@ -6,6 +6,7 @@ import { CreateTransaction } from "../schemas/validation/CreateTransaction.js";
 
 const transactionRouter = Router();
 
+// LOCAL ONDE CHAMA O MIDDLEWARE QUE RETORNA A MENSAGEM: {"message":"Invalid token"} - MATHEUS
 transactionRouter.use(authMiddleware);
 
 transactionRouter.post(
