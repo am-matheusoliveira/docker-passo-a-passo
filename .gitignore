@@ -159,3 +159,4 @@ curso-docker-thicodewallet/spa/*.sw?
 curso-docker-thicodewallet/AWS-EC2
 curso-docker-thicodewallet/AWS-EC2/* thicodewallet.pem
 curso-docker-thicodewallet/AWS-EC2/* dados-instancia.png
+curso-docker-thicodewallet/comandos-docker-iniciar-re-iniciar.txt
